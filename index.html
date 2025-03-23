@@ -134,52 +134,12 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
+            text-decoration: none; /* Remove underline */
         }
 
         .order-btn:hover {
             transform: translateX(-50%) scale(1.05);
             box-shadow: 0 0 35px rgba(138, 43, 226, 0.6);
-        }
-
-        .order-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(20, 10, 40, 0.98);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid var(--neon-purple);
-            width: 90%;
-            max-width: 500px;
-            backdrop-filter: blur(10px);
-            z-index: 1001;
-        }
-
-        .order-form input,
-        .order-form select,
-        .order-form textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: rgba(40, 20, 60, 0.8);
-            border: 1px solid var(--neon-purple);
-            color: white;
-            border-radius: 8px;
-            font-family: inherit;
-        }
-
-        .order-form button {
-            background: var(--cyber-gradient);
-            border: none;
-            padding: 12px;
-            color: white;
-            border-radius: 8px;
-            width: 100%;
-            margin-top: 15px;
-            cursor: pointer;
-            font-weight: bold;
         }
 
         @keyframes fadeInUp {
@@ -230,26 +190,9 @@
         </div>
 
         <!-- Order Button -->
-        <button class="order-btn" onclick="toggleOrderModal()">Order Now</button>
-
-        <!-- Order Modal -->
-        <div class="order-modal" id="orderModal">
-            <h2 style="margin-bottom: 1.5rem;">Place Order 🔮</h2>
-            <form class="order-form" onsubmit="handleOrder(event)">
-                <input type="text" placeholder="Telegram Username" name="Telegram" required>
-                
-                <select name="service" required>
-                    <option value="">Select Service</option>
-                    <option value="Discord Bot Development">Discord Bot Development</option>
-                    <option value="Roblox Cheat Script">Roblox Cheat Script</option>
-                    <option value="Website Development">Website Development</option>
-                </select>
-
-                <textarea placeholder="Project Details" name="details" rows="4" required></textarea>
-
-                <button type="submit">Submit Order</button>
-            </form>
-        </div>
+        <a href="https://t.me/your_telegram_username" target="_blank" class="order-btn">
+            Order Now
+        </a>
 
         <div class="status-alert">
             <span class="online-dot"></span> Online 24/7
@@ -315,70 +258,6 @@
             canvas.height = window.innerHeight;
             init();
         });
-
-        // Order System Functions
-        function toggleOrderModal() {
-            const modal = document.getElementById('orderModal');
-            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
-        }
-
-        async function handleOrder(event) {
-            event.preventDefault();
-            const form = event.target;
-            const submitBtn = form.querySelector('button[type="submit"]');
-            
-            // Get form values
-            const orderData = {
-                telegram: form.querySelector('input').value,
-                service: form.querySelector('select').value,
-                details: form.querySelector('textarea').value
-            };
-
-            // Disable button during submission
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
-
-            try {
-                // Replace with your GitHub token
-                const GITHUB_TOKEN = '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';
-                const REPO_OWNER = 'MooDy-Devs';
-                const REPO_NAME = 'Services';
-
-                // Trigger GitHub Actions workflow
-                const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/dispatches`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`,
-                        'Accept': 'application/vnd.github+json'
-                    },
-                    body: JSON.stringify({
-                        event_type: 'handle-order',
-                        client_payload: orderData
-                    })
-                });
-
-                if (!response.ok) throw new Error('Failed to send order');
-                
-                alert('Order sent successfully! We will contact you soon.');
-                form.reset();
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error sending order. Please try again or contact directly.');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Order';
-                toggleOrderModal();
-            }
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('orderModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
     </script>
 </body>
 </html>
