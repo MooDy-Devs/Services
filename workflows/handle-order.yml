@@ -1,32 +1,10 @@
-name: Deploy and Handle Orders
+name: Handle Order Form Submission
 
 on:
-  push:
-    branches:
-      - main  # Trigger on push to the main branch
   workflow_dispatch:  # Allow manual triggering
+  repository_dispatch:  # Trigger via API
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Deploy to Vercel (or your preferred platform)
-        run: |
-          # Add your deployment commands here
-          echo "Deploying..."
-
   handle-order:
     runs-on: ubuntu-latest
 
@@ -38,19 +16,23 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         run: |
-          # Example: Send a test message to Discord
+          # Replace with your form data (this is just an example)
+          TELEGRAM_USERNAME="TestUser"
+          SERVICE="Test Service"
+          DETAILS="This is a test order."
+
           curl -X POST \
             -H "Content-Type: application/json" \
             -d '{
               "username": "Order Bot",
               "avatar_url": "https://i.imgur.com/a/A3zGHbh",
               "embeds": [{
-                "title": "📬 Test Order Received",
+                "title": "📬 New Order Received",
                 "color": 0x8A2BE2,
                 "fields": [
-                  { "name": "Service", "value": "Test Service", "inline": true },
-                  { "name": "Telegram Username", "value": "TestUser", "inline": true },
-                  { "name": "Project Details", "value": "This is a test order." }
+                  { "name": "Service", "value": "'"$SERVICE"'", "inline": true },
+                  { "name": "Telegram Username", "value": "'"$TELEGRAM_USERNAME"'", "inline": true },
+                  { "name": "Project Details", "value": "'"$DETAILS"'" }
                 ],
                 "timestamp": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'",
                 "footer": {
